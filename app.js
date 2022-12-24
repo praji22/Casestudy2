@@ -92,7 +92,6 @@ app.delete('/api/employeelist/delete',(req,res)=>{
     )
 });
 
-
 //TODO: Update  a employee data from db by using api '/api/employeelist'
 //Request body format:{name:'',location:'',position:'',salary:''}
 app.put('/api/employeelist/update',(req,res)=>{
@@ -109,7 +108,6 @@ app.put('/api/employeelist/update',(req,res)=>{
         }
     )
 });
-
 //! dont delete this code. it connects the front end file.
 app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname + '/dist/Frontend/index.html'));
