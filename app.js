@@ -10,25 +10,22 @@ app.use(Bodyparser.json());
 app.use(Bodyparser.urlencoded({extended:false}));
 app.use(Cors());
 
-app.get('/api/employeelist',(req,res)=>{
-    res.send('Welcome')
-});
-
 app.listen(3000,()=>{
     console.log('server start listening');
-})
+});
 
 const path=require('path');
-const { employeeModel } = require('./model/employee');
 app.use(express.static(path.join(__dirname+'/dist/FrontEnd')));
+
 // Task2: create mongoDB connection 
 Mongoose.connect("mongodb+srv://prajeesha:malavika@cluster0.ofqpaei.mongodb.net/employeeDb?retryWrites=true&w=majority",{useNewUrlParser:true})
 
+let { employeeModel } = require('./model/employee');
 //Task 2 : write api with error handling and appropriate api mentioned in the TODO below
 
 
 //TODO: get data from db  using api '/api/employeelist'
-app.post('/api/employeelist/viewall',(req,res)=>{
+app.get('/api/employeelist',(req,res)=>{
     employeeModel.find(
         (err,data)=>{
             if (err) {
@@ -42,11 +39,10 @@ app.post('/api/employeelist/viewall',(req,res)=>{
 
 
 //TODO: get single data from db  using api '/api/employeelist/:id'
-app.post('/api/employeelist/:id/search',(req,res)=>{
+app.get('/api/employeelist/:id',(req,res)=>{
     let id = req.params.id;
     var data = req.body;
-    employeeModel.find(data,
-        (err,data)=>{
+    employeeModel.findById(id,(err,data)=>{
             if (err) {
                 res.json({"status":"error","error":err})
             } else {
@@ -61,10 +57,10 @@ app.post('/api/employeelist/:id/search',(req,res)=>{
 
 //TODO: send data from db using api '/api/employeelist'
 //Request body format:{name:'',location:'',position:'',salary:''}
-app.post('/api/employeelist/add',async(req,res)=>{
+app.post('/api/employeelist',async(req,res)=>{
     var data = req.body;
-    var employee = new employeeModel(data);
-    await employee.save(
+    var employee2 = new employeeModel(data);
+    await employee2.save(
         (err,data)=>{
             if (err) {
                 res.json({"status":"error","error":err})
@@ -77,12 +73,10 @@ app.post('/api/employeelist/add',async(req,res)=>{
 });
 
 //TODO: delete a employee data from db by using api '/api/employeelist/:id'
-app.delete('/api/employeelist/delete',(req,res)=>{
-    var position = req.body.position;
+app.delete('/api/employeelist/:id',(req,res)=>{
+    var id = req.body.id;
     var data = req.body;
-    employeeModel.findOneAndDelete(
-        {"position": position},
-        data,(err,data)=>{
+    employeeModel.findByIdAndDelete(id,(err,data)=>{
             if (err) {
                 res.json({"status":"error","error":err})
             } else {
@@ -94,11 +88,11 @@ app.delete('/api/employeelist/delete',(req,res)=>{
 
 //TODO: Update  a employee data from db by using api '/api/employeelist'
 //Request body format:{name:'',location:'',position:'',salary:''}
-app.put('/api/employeelist/update',(req,res)=>{
-    var position = req.body.position;
+app.put('/api/employeelist',(req,res)=>{
+    var name = req.body.name;
     var data = req.body;
     employeeModel.findOneAndUpdate(
-        {"position": position},
+        {"name": name},
         data,(err,data)=>{
             if (err) {
                 res.json({"status":"error","error":err})

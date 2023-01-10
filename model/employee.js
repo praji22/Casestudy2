@@ -6,6 +6,6 @@ const employeeSchema = Mongoose.Schema(
         position:String,
         salary:Number
     }
-)
+);
 var employeeModel = Mongoose.model("employees",employeeSchema);
 module.exports = {employeeModel};
